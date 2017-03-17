@@ -5,6 +5,19 @@ pg_replication:
         usage: "GAUGE"
         description: "Replication lag behind master in seconds"
 
+pg_londiste_replication:
+  query: "SELECT consumer_name, %s from pgq.get_consumer_info() where consumer_name !~ 'watermark$'"
+  metrics:
+    - londiste_lag:
+        usage: "GAUGE"
+        description: "Londiste lag"
+    - londiste_last_seen:
+        usage: "GAUGE"
+        description: "Londiste last seen"
+    - londiste_pending_events:
+        usage: "GAUGE"
+        description: "Londiste pending events"
+        
 pg_postmaster:
   query: "SELECT pg_postmaster_start_time as start_time_seconds from pg_postmaster_start_time()"
   metrics:
