@@ -6,7 +6,7 @@ pg_replication:
         description: "Replication lag behind master in seconds"
 
 pg_londiste_replication:
-  query: "SELECT consumer_name, %s from pgq.get_consumer_info() where consumer_name !~ 'watermark$'"
+  query: "SELECT consumer_name, londiste_lag, londiste_last_seen, londiste_pending_events from pgq.get_consumer_info() where consumer_name !~ 'watermark$'"
   metrics:
     - londiste_lag:
         usage: "GAUGE"
@@ -26,7 +26,7 @@ pg_postmaster:
         description: "Time at which postmaster started"
 
 pg_settings_shared_buffers:
-  query: "SELECT 8192*setting::int as bytes from pg_settings where name = 'shared_buffers'"
+  query: "SELECT 8192*(setting::int/1024) as bytes from pg_settings where name = 'shared_buffers'"
   metrics:
     - bytes:
         usage: "GAUGE"
