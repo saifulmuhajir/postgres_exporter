@@ -6,15 +6,12 @@ pg_replication:
         description: "Replication lag behind master in seconds"
 
 pg_londiste_replication:
-  query: "SELECT consumer_name, londiste_lag, londiste_last_seen, londiste_pending_events from pgq.get_consumer_info() where consumer_name !~ 'watermark$'"
+  query: "SELECT consumer_name, GREATEST(0, EXTRACT(EPOCH FROM lag)) as londiste_lag, pending_events from pgq.get_consumer_info() where consumer_name !~ 'watermark$'"
   metrics:
     - londiste_lag:
         usage: "GAUGE"
         description: "Londiste lag"
-    - londiste_last_seen:
-        usage: "GAUGE"
-        description: "Londiste last seen"
-    - londiste_pending_events:
+    - pending_events:
         usage: "GAUGE"
         description: "Londiste pending events"
         
